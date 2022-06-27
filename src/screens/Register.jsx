@@ -15,11 +15,32 @@ import headerBg from "../../assets/a.jpg";
 import { AntDesign } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import { login } from "../redux/authSlice";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../firebaseConfig";
 
 const Register = () => {
   const navigation = useNavigation();
-
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [image, setImage] = useState(null);
+
+  const dispatch = useDispatch();
+
+  const handleSignIn = async () => {
+    try {
+      const userCredentials = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      dispatch(login(userCredentials.user));
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -111,6 +132,7 @@ const Register = () => {
                 paddingLeft: 15,
                 fontSize: 18,
               }}
+              onChangeText={(text) => setEmail(text)}
             />
           </View>
           <View
@@ -211,13 +233,12 @@ const Register = () => {
                 paddingLeft: 15,
                 fontSize: 18,
               }}
+              secureTextEntry={true}
+              onChangeText={(text) => setPassword(text)}
             />
           </View>
           <View style={{ marginVertical: 15 }}>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => navigation.navigate("Home")}
-            >
+            <TouchableOpacity style={styles.button} onPress={handleSignIn}>
               <Text style={styles.buttonText}>Register</Text>
             </TouchableOpacity>
           </View>
