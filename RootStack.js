@@ -14,9 +14,11 @@ import { useNavigation } from "@react-navigation/native";
 import UserProfile from "./src/screens/UserProfile";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "./firebaseConfig";
 import { login, logout } from "./src/redux/authSlice";
+import Header from "./src/components/Header";
+
 const Stack = createStackNavigator();
 
 export default function RootStack() {
@@ -115,28 +117,3 @@ const styles = StyleSheet.create({
     backgroundColor: "#f1f1f1",
   },
 });
-
-const Header = ({ title }) => {
-  const { navigate } = useNavigation();
-  return (
-    <SafeAreaView
-      style={{
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        paddingHorizontal: 16,
-        backgroundColor: "#FE2B4C",
-        height: 75,
-      }}
-    >
-      <Text></Text>
-      <Text style={{ color: "#fff", fontSize: 22 }}>
-        {title || "ShareFast"}
-      </Text>
-      <TouchableOpacity onPress={() => navigate("UserProfile")}>
-        <AntDesign name="user" size={24} color="#fff" />
-      </TouchableOpacity>
-      {/* <Text style={{ color: "#666", fontSize: 16 }}>Profile</Text> */}
-    </SafeAreaView>
-  );
-};

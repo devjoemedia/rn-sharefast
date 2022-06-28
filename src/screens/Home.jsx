@@ -20,17 +20,6 @@ const Home = () => {
 
   const { user, authenticated } = useSelector((state) => state.user);
 
-  const dispatch = useDispatch();
-
-  const handleSignOut = async () => {
-    try {
-      dispatch(logout());
-      await signOut(auth);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
   return (
     <View style={{ flex: 1 }}>
       <View style={{ flex: 0.9, justifyContent: "space-around" }}>
@@ -41,20 +30,6 @@ const Home = () => {
           <Text style={{ color: "#666", fontSize: 16 }}>
             Scan this QR below to share your contacts
           </Text>
-          <TouchableOpacity
-            style={{
-              borderWidth: 1,
-              borderColor: "#FE2B4C",
-              padding: 10,
-              minWidth: 100,
-              borderRadius: 4,
-            }}
-            onPress={handleSignOut}
-          >
-            <Text style={{ color: "#FE2B4C", textAlign: "center" }}>
-              SignOut
-            </Text>
-          </TouchableOpacity>
         </View>
 
         <View style={{ alignItems: "center" }}>

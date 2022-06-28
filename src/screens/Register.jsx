@@ -35,8 +35,16 @@ const Register = () => {
         email,
         password
       );
+      console.log("registered");
 
-      dispatch(login(userCredentials.user));
+      dispatch(
+        login({
+          email: userCredentials.user.email,
+          uid: userCredentials.user.uid,
+          displayName: userCredentials.user.displayName,
+          photoUrl: userCredentials.user.photoURL,
+        })
+      );
     } catch (error) {
       console.log(error.message);
     }
