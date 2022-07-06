@@ -1,25 +1,51 @@
 import { View, Text, Image } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import code from "../../assets/a.jpg";
 import { useNavigation } from "@react-navigation/native";
 import { Feather, Ionicons, AntDesign, Entypo } from "@expo/vector-icons";
+import { useSelector } from "react-redux";
+import { firestore, storage } from "../../firebaseConfig";
+import { doc, getDoc } from "firebase/firestore";
+import { getDownloadURL, ref } from "firebase/storage";
 
 const UserProfile = () => {
+  const [user, setUser] = useState(null);
+
+  const { uid, email } = useSelector(({ user }) => user.user);
+
+  const getUserDetails = async () => {
+    try {
+      const docRef = doc(firestore, "users", uid);
+      const docSnap = await getDoc(docRef);
+
+      const url = await getDownloadURL(ref(storage, `images/${uid}`));
+
+      const userData = { ...docSnap.data(), image: url, email };
+      if (docSnap.exists()) {
+        setUser(userData);
+      }
+    } catch (error) {
+      console.log("ErrMsg: " + error.message);
+    }
+  };
+
+  useEffect(() => {
+    getUserDetails();
+  }, []);
+
   return (
     <View style={{ flex: 1, padding: 16 }}>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <View>
           <Image
-            source={code}
+            source={{ uri: user?.image }}
             style={{ width: 80, height: 80, borderRadius: 50, marginRight: 10 }}
           />
         </View>
 
         <View>
-          <Text style={{ color: "#222", fontSize: 18 }}>Joseph Nartey</Text>
-          <Text style={{ color: "#666", fontSize: 16 }}>
-            Senior Full Stack Developer
-          </Text>
+          <Text style={{ color: "#222", fontSize: 18 }}>{user?.fullname}</Text>
+          <Text style={{ color: "#666", fontSize: 16 }}>{user?.role}</Text>
         </View>
       </View>
 
@@ -68,7 +94,7 @@ const UserProfile = () => {
         >
           <Feather name="phone" size={24} color="#666" />
           <Text style={{ color: "#666", fontSize: 22, marginLeft: 20 }}>
-            +233 544 323 232
+            {user?.phone}
           </Text>
         </View>
         <View
@@ -80,7 +106,7 @@ const UserProfile = () => {
         >
           <Feather name="mail" size={24} color="#666" />
           <Text style={{ color: "#666", fontSize: 22, marginLeft: 20 }}>
-            developer@example.com
+            {user?.email}
           </Text>
         </View>
         <View
@@ -92,7 +118,7 @@ const UserProfile = () => {
         >
           <Ionicons name="location-sharp" size={24} color="#ccc" />
           <Text style={{ color: "#666", fontSize: 22, marginLeft: 20 }}>
-            Califonia
+            Califonia, LA
           </Text>
         </View>
       </View>

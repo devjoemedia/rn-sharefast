@@ -22,16 +22,20 @@ import Header from "./src/components/Header";
 const Stack = createStackNavigator();
 
 export default function RootStack() {
-  const { user, authenticated } = useSelector((state) => state.user);
+  const { user, authenticated } = useSelector(({ user }) => ({
+    user: user.user,
+    authenticated: user.authenticated,
+  }));
+
   const dispatch = useDispatch();
 
   useEffect(() => {
-    onAuthStateChanged(auth, (authUser) => {
+    auth.onAuthStateChanged((authUser) => {
       if (authUser) {
         dispatch(
           login({
-            email: authUser.email,
-            uid: authUser.uid,
+            email: authUser?.email,
+            uid: authUser?.uid,
           })
         );
       } else {
