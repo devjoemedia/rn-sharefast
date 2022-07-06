@@ -18,12 +18,19 @@ import { useNavigation } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
 import { login } from "../redux/authSlice";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../firebaseConfig";
+import { auth, firestore, storage } from "../../firebaseConfig";
+import { doc, setDoc } from "firebase/firestore";
+import { ref, uploadBytes } from "firebase/storage";
 
 const Register = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [fullname, setFullname] = useState("");
+  const [role, setRole] = useState("");
+  const [phone, setPhone] = useState("");
+  const [twitter, setTwitter] = useState("");
+  const [linkedin, setLinkedin] = useState("");
   const [image, setImage] = useState(null);
 
   const dispatch = useDispatch();
@@ -35,16 +42,19 @@ const Register = () => {
         email,
         password
       );
-      console.log("registered");
 
-      dispatch(
-        login({
-          email: userCredentials.user.email,
-          uid: userCredentials.user.uid,
-          displayName: userCredentials.user.displayName,
-          photoUrl: userCredentials.user.photoURL,
-        })
-      );
+      const uid = userCredentials.user.uid;
+
+      const userInfo = {
+        fullname,
+        role,
+        phone,
+        twitter,
+        linkedin,
+      };
+
+      await setDoc(doc(firestore, "users", uid), userInfo);
+      await uploadProfileImage(uid, image);
     } catch (error) {
       console.log(error.message);
     }
@@ -120,6 +130,7 @@ const Register = () => {
                 paddingLeft: 15,
                 fontSize: 18,
               }}
+              onChangeText={(text) => setFullname(text)}
             />
           </View>
           <View
@@ -161,6 +172,7 @@ const Register = () => {
                 paddingLeft: 15,
                 fontSize: 18,
               }}
+              onChangeText={(text) => setPhone(text)}
             />
           </View>
           <View
@@ -181,6 +193,7 @@ const Register = () => {
                 paddingLeft: 15,
                 fontSize: 18,
               }}
+              onChangeText={(text) => setRole(text)}
             />
           </View>
           <View
@@ -201,6 +214,7 @@ const Register = () => {
                 paddingLeft: 15,
                 fontSize: 18,
               }}
+              onChangeText={(text) => setTwitter(text)}
             />
           </View>
           <View
@@ -221,6 +235,7 @@ const Register = () => {
                 paddingLeft: 15,
                 fontSize: 18,
               }}
+              onChangeText={(text) => setLinkedin(text)}
             />
           </View>
           <View
@@ -257,6 +272,29 @@ const Register = () => {
 };
 
 export default Register;
+
+export const uploadProfileImage = async (uid, image) => {
+  try {
+    const blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function (e) {
+        console.log(e);
+        reject(new TypeError("Network request failed"));
+      };
+      xhr.responseType = "blob";
+      xhr.open("GET", image, true);
+      xhr.send(null);
+    });
+
+    const imagesRef = ref(storage, `images/${uid}`);
+    await uploadBytes(imagesRef, blob);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 const styles = StyleSheet.create({
   container: {

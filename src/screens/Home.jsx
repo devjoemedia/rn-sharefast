@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, Image } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import code from "../../assets/a.jpg";
 import { useNavigation } from "@react-navigation/native";
 import QRCode from "react-native-qrcode-svg";
@@ -18,7 +18,28 @@ const Home = () => {
     location: "Easthamptten, UK",
   };
 
-  const { user, authenticated } = useSelector((state) => state.user);
+  // const { user, authenticated } = useSelector((state) => state.user);
+  const { uid, email } = useSelector(({ user }) => user);
+
+  const getUserDetails = async () => {
+    try {
+      const docRef = doc(firestore, "users", uid);
+      const docSnap = await getDoc(docRef);
+
+      const url = await getDownloadURL(ref(storage, `images/${uid}`));
+      setImageUri(url);
+
+      const userData = { ...docSnap.data(), image: url, email };
+
+      if (docSnap.exists()) setUser(userData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getUserDetails();
+  }, []);
 
   return (
     <View style={{ flex: 1 }}>

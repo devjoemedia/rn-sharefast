@@ -8,7 +8,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyDVYxugzJPQu7J6rq_VmcG3zPKcJd6anAk",
   authDomain: "sharefast-e7fa2.firebaseapp.com",
   projectId: "sharefast-e7fa2",
-  storageBucket: "sharefast-e7fa2.appspot.com",
+  storageBucket: "gs://sharefast-e7fa2.appspot.com",
   messagingSenderId: "40333533921",
   appId: "1:40333533921:web:7b3b0a315d5987a3480da0",
 };

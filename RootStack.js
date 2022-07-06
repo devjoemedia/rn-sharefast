@@ -32,8 +32,6 @@ export default function RootStack() {
           login({
             email: authUser.email,
             uid: authUser.uid,
-            displayName: authUser.displayName,
-            photoUrl: authUser.photoURL,
           })
         );
       } else {
