@@ -23,8 +23,8 @@ const Stack = createStackNavigator();
 
 export default function RootStack() {
   const { user, authenticated } = useSelector(({ user }) => ({
-    user: user.user,
-    authenticated: user.authenticated,
+    user: user?.user,
+    authenticated: user?.authenticated,
   }));
 
   const dispatch = useDispatch();

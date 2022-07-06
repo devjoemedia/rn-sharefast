@@ -12,7 +12,10 @@ const Home = () => {
   const { navigate } = useNavigation();
   const [user, setUser] = useState(null);
 
-  const { uid, email } = useSelector(({ user }) => user.user);
+  const { uid, email } = useSelector(({ user }) => ({
+    uid: user?.uid,
+    email: user?.email,
+  }));
 
   const getUserDetails = async () => {
     try {

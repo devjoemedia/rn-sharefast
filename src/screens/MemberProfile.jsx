@@ -17,7 +17,7 @@ const MemberProfile = ({ route }) => {
 
         <View>
           <Text style={{ color: "#222", fontSize: 18 }}>
-            {userDetails?.name}
+            {userDetails?.fullname}
           </Text>
           <Text style={{ color: "#666", fontSize: 16 }}>
             {userDetails?.role}

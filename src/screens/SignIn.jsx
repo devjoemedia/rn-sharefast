@@ -33,7 +33,6 @@ const SignIn = () => {
         password
       );
 
-      console.log("logedin");
       dispatch(
         login({
           email: userCredentials.user.email,
