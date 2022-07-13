@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { SafeAreaView } from "react-native-safe-area-context";
+import BarcodeMask from "react-native-barcode-mask";
 
 const Scarner = () => {
   const navigation = useNavigation();
@@ -25,12 +26,23 @@ const Scarner = () => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ flex: 0.9 }}>
+    <SafeAreaView style={{ flex: 1, padding: 0 }}>
+      <View style={{ flex: 0.9, padding: 0 }}>
         <BarCodeScanner
           onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
           style={StyleSheet.absoluteFillObject}
-        />
+        >
+          <BarcodeMask
+            edgeWidth={40}
+            edgeHeight={40}
+            height={250}
+            width={320}
+            edgeBorderWidth={15}
+            edgeRadius={20}
+            backgroundColor="rgba(0, 0, 0, 0)"
+            showAnimatedLine={false}
+          />
+        </BarCodeScanner>
       </View>
 
       <View
